@@ -23,13 +23,18 @@ public class LocationView extends javax.swing.JFrame {
      * Creates new form LocationView
      */
     
-    private String header[] = {"Location_ID","Street_Address","Postal_Code","City","State_Province","Country_ID"};
+    private String header[] = {"NO", "Location_I","Street_Address","Postal_Code","City","State_Province","Country_ID"};
+    private String headerTable[] ={"locationId","Street_Address","Postal_Code","City","State_Province","Country_Id"};
+ 
     public LocationsController lc;
+
 
     public LocationView() {
      initComponents();
      lc = new LocationsController();
      lc.bindingAll(tblLocation, header);
+     lc.loadCountries(cmbCountry);
+     
      
     }
 
@@ -56,9 +61,9 @@ public class LocationView extends javax.swing.JFrame {
         txtPostal = new javax.swing.JTextField();
         txtProv = new javax.swing.JTextField();
         txtCity = new javax.swing.JTextField();
-        txtCountryID = new javax.swing.JTextField();
         btnSimpan = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
+        cmbCountry = new javax.swing.JComboBox<>();
         txtCari = new javax.swing.JTextField();
         btnSearch = new javax.swing.JButton();
         cmbKategori = new javax.swing.JComboBox<>();
@@ -108,6 +113,12 @@ public class LocationView extends javax.swing.JFrame {
             }
         });
 
+        cmbCountry.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cmbCountryActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -137,16 +148,16 @@ public class LocationView extends javax.swing.JFrame {
                         .addComponent(LblCountry)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(txtCountryID, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
-                    .addComponent(txtProv)
-                    .addComponent(txtCity))
+                    .addComponent(txtProv, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
+                    .addComponent(txtCity)
+                    .addComponent(cmbCountry, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(31, 31, 31))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(219, 219, 219)
                 .addComponent(btnSimpan)
                 .addGap(83, 83, 83)
                 .addComponent(btnHapus)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,9 +179,9 @@ public class LocationView extends javax.swing.JFrame {
                 .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(LblCountry)
-                    .addComponent(txtCountryID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtPostal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(LblPostal))
+                    .addComponent(LblPostal)
+                    .addComponent(cmbCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(58, 58, 58)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnHapus)
@@ -241,41 +252,27 @@ public class LocationView extends javax.swing.JFrame {
 
     private void btnSimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimpanActionPerformed
         // TODO add your handling code here:
-         boolean hasil = false;
-        if (!txtID.isEnabled()) {
-            hasil = lc.update((Short.parseShort(txtID.getText())),
-                    txtStreet.getText(),
-                    txtPostal.getText(),
-                    txtCity.getText(),
-                    txtProv.getText(),
-                    txtCountryID.getText());
-        } else {
-            hasil = lc.insert((Short.parseShort(txtID.getText())),
-                    txtStreet.getText(),
-                    txtPostal.getText(),
-                    txtCity.getText(),
-                    txtProv.getText(),
-                    txtCountryID.getText());
-        }
-        txtID.setEnabled(true);
-        btnSimpan.setEnabled(true);
-
-        String Pesan = "Gagal menambahkan data";
+        boolean hasil = false;
+        hasil = lc.save
+        ((Short.parseShort(txtID.getText())), txtStreet.getText(), 
+                txtPostal.getText(), txtCity.getText(),txtProv.getText(),cmbCountry.getSelectedItem().toString(),
+                     txtID.isEnabled());
+        String pesan = "Gagal menyimpan data";
         if (hasil) {
-            Pesan = "Berhasil menambahkan data";
+            pesan = "Berhasil menyimpan data";
         }
-        JOptionPane.showMessageDialog(this, Pesan);
+        JOptionPane.showMessageDialog(this, pesan);
         lc.bindingAll(tblLocation, header);
         reset();
     }//GEN-LAST:event_btnSimpanActionPerformed
 
     private void tblLocationMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblLocationMouseClicked
-        txtID.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 0) + "");
-        txtStreet.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 1) + "");
-        txtPostal.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 2) + "");
-        txtCity.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 3) + "");
-        txtProv.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 4) + "");
-        txtCountryID.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 5) + "");
+        txtID.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 1) + "");
+        txtStreet.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 2) + "");
+        txtPostal.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 3) + "");
+        txtCity.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 4) + "");
+        txtProv.setText(tblLocation.getValueAt(tblLocation.getSelectedRow(), 5) + "");
+   //     cmbCountry.setSelectedIndex(tblLocation.getValueAt(tblLocation.getSelectedRow(), 5) + "");
         
         txtID.setEnabled(false);
         btnSimpan.setEnabled(true);
@@ -284,32 +281,39 @@ public class LocationView extends javax.swing.JFrame {
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
         // TODO add your handling code here:
-        String kolom = "";
-        switch (cmbKategori.getSelectedIndex()) {
-            case 0:
-                kolom = "location_ID";
-                break;
-            case 1:
-                kolom = "Street_Address";
-                break;
-            case 2:
-                kolom = "Postal_Code";
-                break;
-            case 3:
-                kolom = "City";
-                break;
-            case 4:
-                kolom = "State_Province";
-                break;    
-            case 5:
-                kolom = "Country_ID";
-                break;
-            default:
-                throw new AssertionError();
-        }
-        lc.bindingSearch(tblLocation, header, kolom, txtCari.getText());
+         lc.bindingSearch(tblLocation, header, 
+                headerTable[cmbKategori.getSelectedIndex()], 
+                txtCari.getText());
+//        String kolom = "";
+//        switch (cmbKategori.getSelectedIndex()) {
+//            case 0:
+//                kolom = "location_ID";
+//                break;
+//            case 1:
+//                kolom = "Street_Address";
+//                break;
+//            case 2:
+//                kolom = "Postal_Code";
+//                break;
+//            case 3:
+//                kolom = "City";
+//                break;
+//            case 4:
+//                kolom = "State_Province";
+//                break;    
+//            case 5:
+//                kolom = "Country_ID";
+//                break;
+//            default:
+//                throw new AssertionError();
+//        }
+//        lc.bindingSearch(tblLocation, header, kolom, txtCari.getText());
 
     }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void cmbCountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCountryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbCountryActionPerformed
 
     /**
      * @param args the command line arguments
@@ -356,13 +360,13 @@ public class LocationView extends javax.swing.JFrame {
     private javax.swing.JButton btnHapus;
     private javax.swing.JButton btnSearch;
     private javax.swing.JButton btnSimpan;
+    private javax.swing.JComboBox<String> cmbCountry;
     private javax.swing.JComboBox<String> cmbKategori;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable tblLocation;
     private javax.swing.JTextField txtCari;
     private javax.swing.JTextField txtCity;
-    private javax.swing.JTextField txtCountryID;
     private javax.swing.JTextField txtID;
     private javax.swing.JTextField txtPostal;
     private javax.swing.JTextField txtProv;
@@ -374,7 +378,7 @@ public class LocationView extends javax.swing.JFrame {
         txtPostal.setText("");
         txtCity.setText("");
         txtProv.setText("");
-        txtCountryID.setText("");
+        cmbCountry.setSelectedIndex(0);
         btnSimpan.setEnabled(false);
         btnHapus.setEnabled(false);
     }
